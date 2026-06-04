@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .left-panel {
+            width: 45%;
+            background: linear-gradient(160deg, #1e3a5f 0%, #2d6a9f 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 48px;
+            color: white;
+        }
+        .left-panel .logo {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 24px;
+        }
+        .left-panel h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+        .left-panel p { font-size: 14px; opacity: 0.75; text-align: center; max-width: 280px; line-height: 1.6; }
+        .feature { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 13px; opacity: 0.85; }
+        .feature i { font-size: 18px; }
+        .right-panel {
+            width: 55%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+        .login-box { width: 100%; max-width: 400px; }
+        .login-box h3 { font-size: 22px; font-weight: 700; color: #1e3a5f; margin-bottom: 4px; }
+        .login-box p { font-size: 13px; color: #888; margin-bottom: 32px; }
+        .form-label { font-size: 13px; font-weight: 600; color: #444; }
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            padding: 10px 14px;
+        }
+        .form-control:focus {
+            border-color: #2d6a9f;
+            box-shadow: 0 0 0 0.2rem rgba(45,106,159,0.15);
+        }
+        .btn-ingresar {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .btn-ingresar:hover { background: #2d6a9f; color: white; }
+        .alert { border-radius: 8px; font-size: 13px; }
+        .input-group .btn { border-radius: 0 8px 8px 0; border: 1px solid #e0e0e0; border-left: none; background: white; color: #888; }
+        .input-group .btn:hover { background: #f0f4f8; }
+        .input-group .form-control { border-radius: 8px 0 0 8px; }
+        @media (max-width: 768px) {
+            .left-panel { display: none; }
+            .right-panel { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Panel izquierdo -->
+    <div class="left-panel">
+        <div class="logo"><i class="bi bi-people-fill"></i></div>
+        <h2>Sistema de Empleados</h2>
+        <p>Gestiona tu equipo de trabajo de manera eficiente y profesional.</p>
+        <div class="feature"><i class="bi bi-shield-check"></i><span>Acceso seguro por roles</span></div>
+        <div class="feature"><i class="bi bi-file-earmark-text"></i><span>Boletas de pago digitales</span></div>
+        <div class="feature"><i class="bi bi-graph-up"></i><span>Auditoría de cambios</span></div>
+        <div class="feature"><i class="bi bi-clock-history"></i><span>Historial de antigüedad</span></div>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="right-panel">
+        <div class="login-box">
+            <h3>Bienvenido</h3>
+            <p>Ingresa tus credenciales para continuar</p>
+
+            <div th:if="${param.error}" class="alert alert-danger d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Usuario o contraseña incorrectos</span>
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Sesión cerrada correctamente</span>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Usuario</label>
+                    <input type="text" name="correo" class="form-control"
+                           placeholder="nombre de usuario" autofocus required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" name="contrasenia" id="contrasenia"
+                               class="form-control" placeholder="••••••••" required>
+                        <button class="btn" type="button" id="togglePassword">
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-ingresar">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                </button>
+            </form>
+
+            <p class="text-center text-muted mt-4" style="font-size:12px;">
+                © 2026 Sistema de Gestión de Empleados
+            </p>
+        </div>
+    </div>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const input = document.getElementById('contrasenia');
+        const icon = document.getElementById('eyeIcon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    });
+</script>
+</body>
+</html>

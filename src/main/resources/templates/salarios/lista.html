@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Salarios por Área</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: #1e3a5f !important; }
+        .area-card { background: white; border: 0.5px solid #e2e8f0; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 24px; transition: transform 0.18s, box-shadow 0.18s; }
+        .area-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+        .area-icon { width: 48px; height: 48px; border-radius: 12px; background: #1e3a5f; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; margin-bottom: 16px; }
+        .area-nombre { font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
+        .area-salario { font-size: 22px; font-weight: 700; color: #1e3a5f; }
+        .info-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; }
+        .form-control { border-radius: 8px; border: 1px solid #e0e0e0; font-size: 14px; }
+        .form-control:focus { border-color: #2d6a9f; box-shadow: 0 0 0 0.2rem rgba(45,106,159,0.15); }
+        .btn-actualizar { background: #1e3a5f; color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 500; width: 100%; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+        .btn-actualizar:hover { background: #2d6a9f; color: white; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark px-4 py-3">
+    <span class="navbar-brand fw-bold" style="font-size:1rem;">
+        <i class="ti ti-cash me-2" style="font-size:18px; vertical-align:-2px;"></i>Sistema de Empleados
+    </span>
+    <div class="d-flex gap-2">
+        <a href="/inicio" class="btn btn-outline-light btn-sm d-flex align-items-center gap-1">
+            <i class="ti ti-home" style="font-size:15px;"></i>Inicio
+        </a>
+        <a href="/logout" class="btn btn-outline-light btn-sm d-flex align-items-center gap-1">
+            <i class="ti ti-logout" style="font-size:15px;"></i>Cerrar sesión
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="mb-4">
+        <h5 class="fw-bold mb-0" style="color:#1e3a5f;">Gestión de salarios</h5>
+        <small class="text-muted">Administra los salarios base por área de trabajo</small>
+    </div>
+
+    <div class="row g-3">
+        <!-- ===== LOOP: solo tarjeta + formulario ===== -->
+        <div class="col-md-4" th:each="area : ${areas}">
+            <div class="area-card">
+                <div class="area-icon">
+                    <i class="ti ti-building" aria-hidden="true"></i>
+                </div>
+                <div class="area-nombre" th:text="${area.nombrearea}"></div>
+                <div class="info-label mt-1 mb-1">Salario base actual</div>
+                <div class="area-salario" th:text="'S/. ' + ${area.salario}"></div>
+
+                <form th:action="@{/salarios/actualizar/{id}(id=${area.idarea})}"
+                      method="post"
+                      th:data-area="${area.nombrearea}"
+                      class="mt-3 form-salario">
+                    <div class="info-label mb-1">Nuevo salario</div>
+                    <input type="number" name="nuevoSalario" class="form-control"
+                           th:placeholder="${area.salario}" step="0.01" min="0" required>
+                    <button type="button" class="btn-actualizar btn-abrir-modal">
+                        <i class="ti ti-pencil" style="font-size:15px;" aria-hidden="true"></i>Actualizar salario
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- ===== FIN LOOP ===== -->
+    </div>
+</div>
+
+<!-- ===== MODAL: una sola vez, fuera del loop ===== -->
+<div class="modal fade" id="modalConfirmarSalario" tabindex="-1"
+     aria-labelledby="modalConfirmarLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+        <div class="modal-content" style="border-radius: 14px; border: 0.5px solid #e2e8f0; overflow: hidden;">
+
+            <div class="modal-header border-0 pb-0 pt-4 px-4">
+                <div class="d-flex align-items-center gap-2">
+                    <div style="width:38px; height:38px; border-radius:50%; background:rgba(255,193,7,0.15);
+                                display:flex; align-items:center; justify-content:center;">
+                        <i class="ti ti-coins" style="font-size:19px; color:#e0a800;" aria-hidden="true"></i>
+                    </div>
+                    <h6 class="modal-title mb-0 fw-semibold" id="modalConfirmarLabel"
+                        style="font-size:0.95rem; color:#1e293b;">Actualizar salario</h6>
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body px-4 pt-3 pb-2">
+                <p class="mb-1" style="font-size:0.83rem; color:#64748b;">
+                    ¿Confirmas el cambio de salario para el área:
+                </p>
+                <p class="fw-semibold mb-0" id="modalAreaNombre"
+                   style="font-size:0.95rem; color:#1e293b;"></p>
+            </div>
+
+            <div class="modal-footer border-0 pt-2 px-4 pb-4 gap-2">
+                <button type="button" class="btn btn-sm btn-light flex-fill" data-bs-dismiss="modal"
+                        style="font-size:0.82rem;">
+                    <i class="ti ti-x me-1" style="font-size:13px;" aria-hidden="true"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-sm btn-warning flex-fill fw-semibold"
+                        id="btnConfirmarSalario" style="font-size:0.82rem;">
+                    <i class="ti ti-check me-1" style="font-size:13px;" aria-hidden="true"></i>Confirmar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    let formPendiente = null;
+    const modalEl = document.getElementById('modalConfirmarSalario');
+    const modalBS = new bootstrap.Modal(modalEl);
+
+    document.querySelectorAll('.btn-abrir-modal').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const form = this.closest('.form-salario');
+            const input = form.querySelector('input[name="nuevoSalario"]');
+
+            if (!input.reportValidity()) return;
+
+            formPendiente = form;
+            document.getElementById('modalAreaNombre').textContent = form.dataset.area;
+            modalBS.show();
+        });
+    });
+
+    document.getElementById('btnConfirmarSalario').addEventListener('click', function () {
+        if (formPendiente) {
+            formPendiente.submit();
+            formPendiente = null;
+        }
+    });
+
+    // Limpiar referencia si se cierra el modal sin confirmar
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        formPendiente = null;
+    });
+</script>
+</body>
+</html>

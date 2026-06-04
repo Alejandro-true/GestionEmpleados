@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Empleado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+        .navbar { background: #1e3a5f !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .stat-card { border-radius: 12px; padding: 20px; text-align: center; border: none; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .info-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #888; font-weight: 600; }
+        .info-value { font-size: 14px; font-weight: 500; color: #1a1a2e; margin-top: 2px; }
+        .avatar-lg { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 22px; }
+        .section-title { font-size: 13px; font-weight: 700; color: #1e3a5f; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 10px; border-bottom: 2px solid #e8f0fe; margin-bottom: 16px; }
+        .table thead th { background: white; color: #888; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none; border-bottom: 1px solid #f0f0f0; padding: 10px 16px; }
+        .table tbody td { border: none; border-bottom: 1px solid #f8f8f8; padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+        .badge-area { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #e8f4ff; color: #2d6a9f; }
+        .btn-accion { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e0e0e0; background: white; display: inline-flex; align-items: center; justify-content: center; color: #666; font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-accion:hover { background: #f0f4f8; color: #1e3a5f; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark px-4 py-3">
+    <span class="navbar-brand fw-bold"><i class="bi bi-people-fill me-2"></i>Sistema de Empleados</span>
+    <div class="d-flex gap-2">
+        <a href="/empleados" class="btn btn-outline-light btn-sm"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+        <a href="/inicio" class="btn btn-outline-light btn-sm"><i class="bi bi-house me-1"></i>Inicio</a>
+        <a href="/logout" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="card mb-4 p-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="avatar-lg" th:text="${#strings.substring(empleado.usuario.nombre, 0, 1)}"></div>
+            <div>
+                <h5 class="fw-bold mb-0" style="color:#1e3a5f;" th:text="${empleado.usuario.nombre + ' ' + empleado.usuario.apellidopaterno + ' ' + empleado.usuario.apellidomaterno}"></h5>
+                <span class="badge-area mt-1 d-inline-block" th:text="${empleado.codigo}"></span>
+            </div>
+            <div class="ms-auto d-flex gap-2">
+                <a th:href="@{/empleados/salario/{codigo}(codigo=${empleado.codigo})}" class="btn btn-sm" style="background:#1e3a5f; color:white; border-radius:8px;">
+                    <i class="bi bi-cash me-1"></i>Modificar Salario
+                </a>
+                <a href="/empleados" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+                    <i class="bi bi-arrow-left me-1"></i>Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card bg-white">
+                <div class="info-label">Edad</div>
+                <div class="fw-bold mt-1" style="font-size:24px; color:#1e3a5f;" th:text="${edad} + ' años'"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-white">
+                <div class="info-label">Antigüedad</div>
+                <div class="fw-bold mt-1" style="font-size:18px; color:#1e3a5f;" th:text="${antiguedad}"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-white">
+                <div class="info-label">Salario Base</div>
+                <div class="fw-bold mt-1" style="font-size:20px; color:#2d6a9f;" th:text="'S/. ' + ${empleado.area.salario}"></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-white">
+                <div class="info-label">Área</div>
+                <div class="fw-bold mt-1" style="font-size:16px; color:#1e3a5f;" th:text="${empleado.area.nombrearea}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos personales -->
+    <div class="card mb-4 p-4">
+        <div class="section-title"><i class="bi bi-person-fill me-2"></i>Datos Personales</div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="info-label">DNI</div>
+                <div class="info-value" th:text="${empleado.usuario.dni}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="info-label">Nombres Completos</div>
+                <div class="info-value" th:text="${empleado.usuario.nombre + ' ' + empleado.usuario.apellidopaterno + ' ' + empleado.usuario.apellidomaterno}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="info-label">Género</div>
+                <div class="info-value" th:text="${empleado.usuario.genero != null ? empleado.usuario.genero.nombregenero : 'No especificado'}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="info-label">Correo Electrónico</div>
+                <div class="info-value" th:text="${empleado.usuario.email}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="info-label">Fecha de Nacimiento</div>
+                <div class="info-value" th:text="${empleado.usuario.fechanacimiento}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="info-label">Fecha de Ingreso</div>
+                <div class="info-value" th:text="${empleado.fechaingreso}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boletas -->
+    <div class="card mb-4">
+        <div class="p-4 pb-0">
+            <div class="section-title"><i class="bi bi-file-earmark-text me-2"></i>Boletas de Pago</div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="ps-4">PERIODO</th>
+                    <th>FECHA EMISIÓN</th>
+                    <th>TOTAL</th>
+                    <th>DESCARGAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="boleta : ${boletas}">
+                    <td class="ps-4 fw-semibold" th:text="${boleta.periodo}"></td>
+                    <td th:text="${boleta.fechaemision}"></td>
+                    <td class="fw-semibold" style="color:#2d6a9f;" th:text="'S/. ' + ${boleta.total}"></td>
+                    <td>
+                        <a th:href="@{/empleados/boleta/{id}/excel(id=${boleta.idboleta})}"
+                           class="btn btn-sm" style="background:#e8f5e9; color:#2e7d32; border-radius:8px; font-size:12px;">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Excel
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${boletas == null or boletas.isEmpty()}">
+                    <td colspan="4" class="text-center text-muted py-3">No hay boletas registradas</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Auditoría -->
+    <div class="card mb-4" th:if="${auditoria != null and !auditoria.isEmpty()}">
+        <div class="p-4 pb-0">
+            <div class="section-title"><i class="bi bi-clock-history me-2"></i>Historial de Cambios de Salario</div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="ps-4">FECHA</th>
+                    <th>MODIFICADO POR</th>
+                    <th>ÁREA</th>
+                    <th>SALARIO ANTERIOR</th>
+                    <th>SALARIO NUEVO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="aud : ${auditoria}">
+                    <td class="ps-4" th:text="${aud.fechaModificacion}"></td>
+                    <td th:text="${aud.usuarioModifico}"></td>
+                    <td th:text="${aud.audNombreArea}"></td>
+                    <td style="color:#e53935;" th:text="'S/. ' + ${aud.salarioAnterior}"></td>
+                    <td class="fw-semibold" style="color:#2e7d32;" th:text="'S/. ' + ${aud.salarioNuevo}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

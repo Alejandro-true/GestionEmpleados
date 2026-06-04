@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso Denegado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #0c447c !important;
+            padding: 0 24px;
+            height: 56px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff !important;
+        }
+
+        .btn-nav {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255,255,255,0.22);
+            color: #fff;
+        }
+
+        .page-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .error-card {
+            background: #fff;
+            border: 0.5px solid rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #fcebeb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .error-icon-wrap i {
+            font-size: 32px;
+            color: #a32d2d;
+        }
+
+        .error-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #a32d2d;
+            margin: 0 0 10px;
+        }
+
+        .error-desc {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin: 0 0 28px;
+        }
+
+        .error-desc strong {
+            color: #374151;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-back {
+            background: #185fa5;
+            border: none;
+            border-radius: 7px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 9px 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .btn-back:hover {
+            background: #0c447c;
+            color: #fff;
+        }
+
+        .btn-home {
+            background: #f3f4f6;
+            border: 0.5px solid rgba(0,0,0,0.1);
+            border-radius: 7px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 9px 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .btn-home:hover {
+            background: #e5e7eb;
+            color: #111;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark d-flex align-items-center justify-content-between">
+    <span class="navbar-brand">
+        <i class="ti ti-users" style="font-size:20px;"></i>
+        Sistema de Empleados
+    </span>
+    <a href="/inicio" class="btn-nav">
+        <i class="ti ti-home" style="font-size:14px;"></i>
+        Inicio
+    </a>
+</nav>
+
+<div class="page-center">
+    <div class="error-card">
+        <div class="error-icon-wrap">
+            <i class="ti ti-lock"></i>
+        </div>
+        <h4 class="error-title">Acceso denegado</h4>
+        <p class="error-desc">
+            No tienes permisos para realizar esta acción. Solo los usuarios con rol de
+            <strong>Administrador</strong> o <strong>Recursos Humanos</strong>
+            pueden acceder a esta función.
+        </p>
+        <div class="btn-actions">
+            <a href="/empleados" class="btn-back">
+                <i class="ti ti-arrow-left" style="font-size:14px;"></i>
+                Volver
+            </a>
+            <a href="/inicio" class="btn-home">
+                <i class="ti ti-home" style="font-size:14px;"></i>
+                Inicio
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
