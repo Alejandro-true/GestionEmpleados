@@ -3,13 +3,13 @@ services:
   postgres-db:
     image: postgres:15
     container_name: postgres-proyecto
-    RESTART: always
+    restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - ${PORT}
+      - "${DB_HOST_PORT}:${DB_CONTAINER_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
 
